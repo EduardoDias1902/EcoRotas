@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="EcoRota - Plataforma de frete compartilhado que conecta pequenos produtores rurais a motoristas com espaço ocioso, reduzindo custos e desperdício de alimentos.">
+    <meta name="theme-color" content="#0a0f1a">
+    <title>EcoRota - Frete Compartilhado Sustentável</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- ===== SPLASH SCREEN ===== -->
+        <div id="splash-screen" class="splash-screen">
+            <div class="splash-content">
+                <div class="splash-logo">
+                    <div class="splash-icon-ring">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                </div>
+                <h1 class="splash-title">Eco<span>Rota</span></h1>
+                <p class="splash-subtitle">Frete compartilhado sustentável</p>
+                <div class="splash-loader">
+                    <div class="splash-loader-bar"></div>
+                </div>
+            </div>
+            <div class="splash-footer">
+                <p>Alunos: Eduardo Dias da Maia & Kelvin Almeida</p>
+            </div>
+        </div>
+
+        <!-- ===== LOGIN SCREEN ===== -->
+        <div id="login-screen" class="screen login-screen" style="display:none;">
+            <div class="login-header">
+                <div class="login-logo">
+                    <div class="logo-icon-sm"><i class="fas fa-recycle"></i></div>
+                    <h1>Eco<span>Rota</span></h1>
+                </div>
+                <p class="login-tagline">Carona de carga para agricultura familiar</p>
+            </div>
+            <div class="login-body">
+                <div class="login-card glass-card">
+                    <h2>Entrar na plataforma</h2>
+                    <div class="form-group">
+                        <label for="login-email">E-mail ou CPF</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="login-email" placeholder="seu@email.com">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Senha</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="login-password" placeholder="••••••••">
+                        </div>
+                    </div>
+                    <button class="btn-primary btn-full" id="btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Entrar
+                    </button>
+                    <div class="login-divider"><span>ou entre como</span></div>
+                    <div class="login-profiles">
+                        <button class="btn-profile btn-produtor" id="btn-login-produtor">
+                            <i class="fas fa-seedling"></i>
+                            <span>Produtor Rural</span>
+                        </button>
+                        <button class="btn-profile btn-freteiro" id="btn-login-freteiro">
+                            <i class="fas fa-truck"></i>
+                            <span>Motorista / Freteiro</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MAIN APP SHELL ===== -->
+        <div id="main-app" class="screen main-app" style="display:none;">
+            <!-- Top Bar -->
+            <header class="top-bar" id="top-bar">
+                <div class="top-bar-left">
+                    <div class="logo-icon-xs"><i class="fas fa-recycle"></i></div>
+                    <span class="logo-text">Eco<span>Rota</span></span>
+                </div>
+                <div class="top-bar-right">
+                    <div class="gps-badge" id="gps-badge">
+                        <span class="gps-dot"></span>
+                        <i class="fas fa-route"></i>
+                        <span>GPS ATIVO</span>
+                    </div>
+                    <div class="user-avatar" id="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content Area -->
+            <main class="page-content" id="page-content">
+
+                <!-- ===== PAGE: SOLICITAR FRETE ===== -->
+                <section id="page-solicitar" class="page active">
+                    <div class="page-inner">
+                        <!-- Map Area -->
+                        <div class="map-container" id="map-solicitar">
+                            <div class="map-placeholder">
+                                <div class="map-route-line"></div>
+                                <div class="map-pin map-pin-origin">
+                                    <div class="pin-dot green"></div>
+                                    <div class="pin-label">Sítio Boa Esperança (Origem)</div>
+                                </div>
+                                <div class="map-pin map-pin-dest">
+                                    <div class="pin-dot green"></div>
+                                    <div class="pin-label">Mercado Municipal (Destino)</div>
+                                </div>
+                                <div class="map-road-labels">
+                                    <span class="road-label">BR-280 / SC-110</span>
+                                </div>
+                                <button class="map-locate-btn"><i class="fas fa-crosshairs"></i></button>
+                            </div>
+                        </div>
+                        <!-- Route Info -->
+                        <div class="route-header glass-card">
+                            <div class="route-tag"><i class="fas fa-directions"></i> Corupá → Jaraguá do Sul • 24 km</div>
+                        </div>
+
+                        <!-- Route Details Card -->
+                        <div class="card card-route-detail">
+                            <div class="route-detail-row">
+                                <div class="route-icon"><i class="fas fa-dolly"></i></div>
+                                <div class="route-info">
+                                    <strong>Sítio Boa Esperança (Corupá)</strong>
+                                    <span>Mercado Municipal (Jaraguá do Sul)</span>
+                                </div>
+                                <div class="route-distance"><span class="badge badge-green">24 km</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Cargo Size Selection -->
+                        <div class="section-label">TAMANHO DA CARGA</div>
+                        <div class="cargo-options" id="cargo-options">
+                            <div class="cargo-option selected" data-value="5" data-price="42">
+                                <div class="cargo-option-top">
+                                    <i class="fas fa-box"></i>
+                                    <div class="cargo-check"><i class="fas fa-check-circle"></i></div>
+                                </div>
+                                <strong>Hortifrúti</strong>
+                                <span>5 caixas • ~100 kg</span>
+                            </div>
+                            <div class="cargo-option" data-value="10" data-price="68">
+                                <div class="cargo-option-top">
+                                    <i class="fas fa-boxes-stacked"></i>
+                                    <div class="cargo-check"><i class="far fa-square"></i></div>
+                                </div>
+                                <strong>Hortifrúti</strong>
+                                <span>10 caixas • ~200 kg</span>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Button -->
+                        <button class="btn-primary btn-full btn-confirm-frete" id="btn-confirm-frete">
+                            <i class="fas fa-check"></i> Confirmar Frete • R$ <span id="frete-price">42</span>
+                        </button>
+
+                        <div class="destination-note">
+                            <i class="fas fa-map-marker-alt"></i> Mercado Municipal de Jaraguá do Sul
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ===== PAGE: MINHAS CARGAS / RASTREAMENTO ===== -->
+                <section id="page-cargas" class="page">
+                    <div class="page-inner">
+                        <!-- Active Tracking Card -->
+                        <div class="tracking-card glass-card">
+                            <div class="tracking-status">
+                                <div class="status-dot pulse-green"></div>
+                                <span class="status-label">MOTORISTA A CAMINHO</span>
+                                <div class="status-time">PREVISÃO <strong>06:45</strong></div>
+                            </div>
+                            <h2 class="tracking-eta">Chega em 15 min</h2>
+                            <div class="tracking-destination">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Mercado Municipal de Jaraguá do Sul • Box 08
+                            </div>
+                        </div>
+
+                        <!-- Route Tags -->
+                        <div class="tracking-tags">
+                            <div class="tag tag-route"><i class="fas fa-directions"></i> Corupá → Jaraguá do Sul</div>
+                            <div class="tag tag-gps"><span class="gps-dot-sm"></span> GPS Conectado</div>
+                        </div>
+
+                        <!-- Map -->
+                        <div class="map-container map-tracking" id="map-tracking">
+                            <div class="map-placeholder map-dark">
+                                <div class="tracking-route-line"></div>
+                                <div class="tracking-vehicle">
+                                    <div class="vehicle-dot pulse-green-sm"></div>
+                                    <span class="vehicle-label">Em trânsito • BR-280</span>
+                                </div>
+                                <div class="tracking-origin-label">Sítio Boa Esperança</div>
+                                <div class="tracking-dest-label">Mercado Municipal</div>
+                                <div class="map-road-labels">
+                                    <span class="road-label">SC-110</span>
+                                    <span class="road-label r2">BR-280</span>
+                                </div>
+                                <div class="region-labels">
+                                    <span>Rio da Luz</span>
+                                    <span>RIO ITAPOCU</span>
+                                    <span>Ilha da Figueira</span>
+                                    <span>Barra do Rio Cerro</span>
+                                </div>
+                                <div class="map-region-tag"><i class="fas fa-mountain"></i> Vale do Itapocu • SC</div>
+                                <button class="map-locate-btn"><i class="fas fa-crosshairs"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Driver Info -->
+                        <div class="driver-card card">
+                            <div class="driver-info-row">
+                                <div class="driver-avatar"><i class="fas fa-user-circle"></i></div>
+                                <div class="driver-details">
+                                    <strong>Carlos Silva</strong>
+                                    <div class="driver-rating"><i class="fas fa-star"></i> 4.9</div>
+                                    <span class="driver-vehicle">Hilux Prata • ABC-1234</span>
+                                </div>
+                                <div class="driver-actions">
+                                    <button class="btn-icon btn-call"><i class="fas fa-phone"></i></button>
+                                    <button class="btn-icon btn-msg"><i class="fas fa-comment"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cost & PIN -->
+                        <div class="cost-pin-row">
+                            <div class="cost-card card">
+                                <span class="cost-label">SUA PARTE</span>
+                                <div class="cost-value">R$ 42,00</div>
+                                <div class="cost-tag"><i class="fas fa-leaf"></i> Rota Compartilhada</div>
+                            </div>
+                            <div class="pin-card card">
+                                <span class="pin-label">PIN DE ENTREGA</span>
+                                <div class="pin-value" id="delivery-pin">4829</div>
+                                <span class="pin-help">Apresente este código ao motorista no desembarque</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ===== PAGE: MODO FRETEIRO ===== -->
+                <section id="page-freteiro" class="page">
+                    <div class="page-inner">
+                        <!-- Status Card -->
+                        <div class="freteiro-status-card glass-card">
+                            <div class="freteiro-status-row">
+                                <div>
+                                    <div class="status-dot-inline pulse-green"></div>
+                                    <strong>Disponível para Viagens</strong>
+                                    <p>Na Rota Corupá ‖ Jaraguá do Sul</p>
+                                </div>
+                                <div class="status-badge active">ATIVO</div>
+                            </div>
+                            <div class="freteiro-meta">
+                                <span><i class="fas fa-broadcast-tower"></i> Raio de Busca: 80 km</span>
+                                <span class="meta-region">VALE DO ITAPOCU</span>
+                            </div>
+                        </div>
+
+                        <!-- Stats Row -->
+                        <div class="stats-row">
+                            <div class="stat-card card">
+                                <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+                                <span class="stat-label">GANHOS HOJE</span>
+                                <div class="stat-value">R$ 280,00</div>
+                                <span class="stat-sub">Estimado + R$ 110,00</span>
+                            </div>
+                            <div class="stat-card card">
+                                <div class="stat-icon"><i class="fas fa-box-open"></i></div>
+                                <span class="stat-label">ENTREGAS</span>
+                                <div class="stat-value">4 cargas</div>
+                                <span class="stat-sub">100% no prazo</span>
+                            </div>
+                        </div>
+
+                        <!-- Available Cargos -->
+                        <div class="section-header">
+                            <h3>Cargas Disponíveis</h3>
+                            <div class="section-tags">
+                                <span class="badge badge-green">2 na rota</span>
+                                <span class="badge badge-outline">Jaraguá do Sul</span>
+                            </div>
+                        </div>
+
+                        <!-- Cargo Card 1 -->
+                        <div class="cargo-card card" id="cargo-card-1">
+                            <div class="cargo-card-tags">
+                                <span class="tag tag-sm tag-blue">DESVIO 1,2 KM</span>
+                                <span class="tag tag-sm tag-frost">SELO FRIO / HORTIFRÚTI</span>
+                                <div class="cargo-card-price">GANHO<br><strong>R$ 42,00</strong></div>
+                            </div>
+                            <h4>Sítio Boa Esperança (Corupá)</h4>
+                            <p class="cargo-dest"><i class="fas fa-arrow-right"></i> Mercado Municipal Jaraguá</p>
+                            <p class="cargo-details">5 caixas (100 kg) de Hortifrúti •<br>Compatibilidade Sanitária: 100%</p>
+                            <button class="btn-primary btn-full btn-accept" data-cargo="1">
+                                <i class="fas fa-check-circle"></i> Aceitar Carga
+                            </button>
+                        </div>
+
+                        <!-- Cargo Card 2 -->
+                        <div class="cargo-card card" id="cargo-card-2">
+                            <div class="cargo-card-tags">
+                                <span class="tag tag-sm tag-blue">DESVIO 2,4 KM</span>
+                                <span class="tag tag-sm tag-frost">CARGA SECA</span>
+                                <div class="cargo-card-price">GANHO<br><strong>R$ 68,00</strong></div>
+                            </div>
+                            <h4>Coop. Agrícola Guaramirim</h4>
+                            <p class="cargo-dest"><i class="fas fa-arrow-right"></i> Centro de Distribuição Jaraguá</p>
+                            <p class="cargo-details">8 caixas (160 kg) Carga Seca •<br>Compatibilidade Sanitária: 100%</p>
+                            <button class="btn-primary btn-full btn-accept" data-cargo="2">
+                                <i class="fas fa-check-circle"></i> Aceitar Carga
+                            </button>
+                        </div>
+
+                        <!-- Map link -->
+                        <button class="btn-outline btn-full btn-map-opp">
+                            <i class="fas fa-map-marked-alt"></i> Ver no Mapa de Oportunidades
+                        </button>
+                    </div>
+                </section>
+
+                <!-- ===== PAGE: IMPACTO ===== -->
+                <section id="page-impacto" class="page">
+                    <div class="page-inner">
+                        <div class="impact-header">
+                            <span class="badge badge-green-solid">RELATÓRIO MENSAL</span>
+                            <span class="impact-updated">Atualizado há 12 min</span>
+                        </div>
+                        <h2 class="impact-title">Seu Impacto Ecológico</h2>
+                        <p class="impact-subtitle">Resultados apurados por cargas consolidadas e rotas sustentáveis.</p>
+
+                        <!-- Impact Cards -->
+                        <div class="impact-card card">
+                            <div class="impact-card-icon"><i class="fas fa-apple-whole"></i></div>
+                            <span class="impact-card-label">ALIMENTOS SALVOS</span>
+                            <div class="impact-card-value">1.420 <small>kg</small></div>
+                            <p class="impact-card-desc">Desperdício evitado com escoamento veloz</p>
+                        </div>
+
+                        <div class="impact-card card">
+                            <div class="impact-card-icon green"><i class="fas fa-hand-holding-dollar"></i></div>
+                            <span class="impact-card-label">ECONOMIA TOTAL EM FRETE</span>
+                            <span class="badge badge-green-outline impact-badge">+34% vs solo</span>
+                            <div class="impact-card-value green">R$ 840</div>
+                            <p class="impact-card-desc">Economia em rota compartilhada</p>
+                        </div>
+
+                        <div class="impact-card card">
+                            <div class="impact-card-icon teal"><i class="fas fa-leaf"></i></div>
+                            <span class="impact-card-label">REDUÇÃO DE EMISSÕES</span>
+                            <div class="impact-card-value teal">320 <small>kg CO₂</small></div>
+                            <p class="impact-card-desc">Equivale a 18 árvores plantadas</p>
+                        </div>
+
+                        <!-- Last Operation -->
+                        <div class="last-op-card card">
+                            <div class="last-op-header">
+                                <span class="last-op-label">ÚLTIMA OPERAÇÃO</span>
+                                <span class="badge badge-neutral">Concluída</span>
+                            </div>
+                            <div class="last-op-route">
+                                <i class="fas fa-truck"></i>
+                                <div>
+                                    <strong>Sítio Boa Esperança (Corupá) →</strong>
+                                    <span>Mercado Municipal Jaraguá do Sul</span>
+                                    <p>Ontem • Carga compartilhada 100%</p>
+                                </div>
+                            </div>
+                            <div class="last-op-savings">
+                                <span>Economia gerada nesta entrega</span>
+                                <span class="savings-label">ECONOMIA</span>
+                                <strong class="savings-value">R$ 380</strong>
+                            </div>
+                        </div>
+
+                        <button class="btn-primary btn-full btn-share">
+                            <i class="fas fa-share-alt"></i> Compartilhar Resultado Oficial
+                        </button>
+                    </div>
+                </section>
+
+                <!-- ===== PAGE: PERFIL PRODUTOR ===== -->
+                <section id="page-produtor" class="page">
+                    <div class="page-inner">
+                        <!-- Profile Header -->
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                <i class="fas fa-tractor"></i>
+                                <span class="profile-state-badge">SC-JS</span>
+                            </div>
+                            <h2 class="profile-name">Sítio Boa Esperança</h2>
+                            <span class="profile-owner green">Eduardo Maia</span>
+                            <span class="profile-location"><i class="fas fa-map-marker-alt"></i> Corupá / Jaraguá do Sul - SC</span>
+                            <p class="profile-type">Hortifrúti Orgânico & Produtos Coloniais</p>
+                            <span class="badge badge-outline-white"><i class="fas fa-seedling"></i> PRODUTOR FAMILIAR CERTIFICADO</span>
+                        </div>
+
+                        <!-- Sanitary Preferences -->
+                        <div class="card section-card">
+                            <div class="section-card-header">
+                                <i class="fas fa-shield-alt"></i>
+                                <h3>PREFERÊNCIAS SANITÁRIAS</h3>
+                            </div>
+                            <p class="section-card-desc">Requisitos de higiene e transporte aplicados a cada chamado de frete.</p>
+
+                            <div class="pref-item">
+                                <div class="pref-check active"><i class="fas fa-check-square"></i></div>
+                                <div class="pref-info">
+                                    <strong>Lote Higienizado</strong>
+                                    <span>Segurança para celíacos e zero contaminação</span>
+                                </div>
+                                <span class="pref-status optional">OPCIONAL</span>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-check"><i class="far fa-square"></i></div>
+                                <div class="pref-info">
+                                    <strong>Cadeia de Frio / Refrigerado</strong>
+                                    <span>Controle térmico contínuo durante o percurso</span>
+                                </div>
+                                <span class="pref-status optional">OPCIONAL</span>
+                            </div>
+                            <div class="pref-item">
+                                <div class="pref-check active"><i class="fas fa-check-square"></i></div>
+                                <div class="pref-info">
+                                    <strong>Caçamba Fechada e Forrada</strong>
+                                    <span>Isolamento completo contra poeira e intempéries</span>
+                                </div>
+                                <span class="pref-status active-status">ATIVO</span>
+                            </div>
+
+                            <div class="match-sanitario-badge">
+                                <i class="fas fa-check-circle"></i> MATCH SANITÁRIO ATIVO
+                            </div>
+                            <p class="match-desc">Seus fretes são oferecidos apenas a motoristas com caçamba certificada e histórico limpo sem transporte de pesticidas ou cargas contaminantes.</p>
+                        </div>
+
+                        <!-- Conformity History -->
+                        <div class="card section-card">
+                            <div class="section-card-header">
+                                <i class="fas fa-file-shield"></i>
+                                <h3>HISTÓRICO & CONFORMIDADE</h3>
+                                <span class="badge badge-green-outline">ÚLTIMO LOTE</span>
+                            </div>
+
+                            <div class="despacho-card">
+                                <div class="despacho-header">
+                                    <div><i class="fas fa-circle-check"></i> <strong>DESPACHO #8492-SC</strong></div>
+                                    <span class="badge badge-green-solid">HOMOLOGADO</span>
+                                </div>
+                                <p>Certificado de Higienização ANVISA emitido</p>
+                                <button class="btn-link"><i class="fas fa-file-pdf"></i> BAIXAR LAUDO PDF (AUTENTICADO)</button>
+                            </div>
+
+                            <div class="cert-card">
+                                <div class="cert-header">
+                                    <div class="cert-logo"><i class="fas fa-shield-virus"></i></div>
+                                    <div>
+                                        <small>REPÚBLICA FEDERATIVA DO BRASIL • VIGILÂNCIA SANITÁRIA SC</small>
+                                        <strong>CERTIFICADO DE CONFORMIDADE E HIGIENIZAÇÃO DE TRANSPORTE</strong>
+                                        <span>Nº 8492/2024-SC</span>
+                                    </div>
+                                    <span class="badge badge-green-solid">OFICIAL</span>
+                                </div>
+                                <div class="cert-details">
+                                    <div class="cert-row"><span>Emissor:</span><strong>LACEN/ANVISA Núcleo Reg. Jaraguá do Sul</strong></div>
+                                    <div class="cert-row"><span>Origem:</span><strong>Sítio Boa Esperança (Corupá/SC)</strong></div>
+                                    <div class="cert-row"><span>Lote Auditado:</span><strong>#8492-SC • Orgânico Sem Glúten</strong></div>
+                                    <div class="cert-row"><span>Resultado / Análise:</span><strong class="text-green">Ausência de contaminantes (Aprovado)</strong></div>
+                                    <div class="cert-row"><span>Validade Operacional:</span><strong>30 dias (Até 28/11/2024)</strong></div>
+                                </div>
+                                <div class="cert-hash">
+                                    <i class="fas fa-link"></i> HOMOLOGADO DIGITALMENTE ICP-BRASIL<br>
+                                    <small>HASH: 4B91.8492.FA02.9C31.ANV-SC</small>
+                                </div>
+                                <div class="cert-actions">
+                                    <button class="btn-outline-sm"><i class="fas fa-eye"></i> VER COMPLETO</button>
+                                    <button class="btn-outline-sm btn-green-outline"><i class="fas fa-download"></i> BAIXAR PDF</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn-primary btn-full btn-save-prefs">
+                            <i class="fas fa-save"></i> SALVAR PREFERÊNCIAS
+                        </button>
+                        <button class="btn-outline btn-full btn-solicitar-exig">
+                            <i class="fas fa-truck"></i> SOLICITAR FRETE COM ESTAS EXIGÊNCIAS
+                        </button>
+                    </div>
+                </section>
+
+                <!-- ===== PAGE: PERFIL FRETEIRO ===== -->
+                <section id="page-perfil-freteiro" class="page">
+                    <div class="page-inner">
+                        <div class="profile-header">
+                            <div class="profile-avatar freteiro-avatar">
+                                <i class="fas fa-id-badge"></i>
+                            </div>
+                            <h2 class="profile-name">Carlos Silva <i class="fas fa-check-circle text-green"></i></h2>
+                            <span class="profile-role">Motorista Parceiro EcoRota</span>
+                            <div class="profile-rating">
+                                <i class="fas fa-star"></i> 4.9 <span>(142 fretes concluídos)</span> • <span class="badge badge-outline-white">DOC. APROVADOS</span>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle Info -->
+                        <div class="card vehicle-card">
+                            <span class="vehicle-label">VEÍCULO HOMOLOGADO</span>
+                            <strong>Fiorino Furgão 2021 • BRA-4E29 (Jaraguá do Sul / SC)</strong>
+                        </div>
+
+                        <div class="card availability-card">
+                            <div class="status-dot-inline pulse-green"></div>
+                            <strong>Disponível para Cargas</strong>
+                            <span>Vale do Itapocu (raio 80km) • Ativo</span>
+                        </div>
+
+                        <!-- ANVISA Seals -->
+                        <div class="card section-card">
+                            <div class="section-card-header">
+                                <h3>SELOS SANITÁRIOS ANVISA</h3>
+                                <span class="badge badge-green-solid">3 QUALIFICAÇÕES</span>
+                            </div>
+
+                            <div class="seal-item">
+                                <div class="seal-icon frost"><i class="fas fa-snowflake"></i></div>
+                                <div class="seal-info">
+                                    <strong>Cadeia do Frio (-2°C a 4°C)</strong>
+                                    <span>Vale do Itapocu</span>
+                                    <small>(Jaraguá, Guaramirim, Corupá)</small>
+                                </div>
+                                <span class="badge badge-green-solid">ATIVO</span>
+                                <button class="btn-icon-sm"><i class="fas fa-sync-alt"></i></button>
+                            </div>
+
+                            <div class="seal-item">
+                                <div class="seal-icon clean"><i class="fas fa-hand-sparkles"></i></div>
+                                <div class="seal-info">
+                                    <strong>Lote Higienizado (Anti-Alérgenos)</strong>
+                                    <span>Vale do Itapocu</span>
+                                    <small>(Jaraguá, Guaramirim, Corupá)</small>
+                                </div>
+                                <span class="badge badge-green-solid">ATIVO</span>
+                                <button class="btn-icon-sm"><i class="fas fa-sync-alt"></i></button>
+                            </div>
+
+                            <div class="seal-item">
+                                <div class="seal-icon dry"><i class="fas fa-box"></i></div>
+                                <div class="seal-info">
+                                    <strong>Carga Seca / Hortifrúti Fresco</strong>
+                                    <span>Vale do Itapocu</span>
+                                    <small>(Jaraguá, Guaramirim, Corupá)</small>
+                                </div>
+                                <span class="badge badge-green-solid">ATIVO</span>
+                                <button class="btn-icon-sm"><i class="fas fa-sync-alt"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Compatibility -->
+                        <div class="card compat-card">
+                            <div class="compat-header">
+                                <i class="fas fa-shield-alt"></i>
+                                <h3>COMPATIBILIDADE DE CARGA</h3>
+                            </div>
+                            <p>Transporte exclusivo ou fracionado com rastreamento telemétrico e bloqueio inteligente contra cargas incompatíveis.</p>
+                        </div>
+
+                        <button class="btn-outline btn-full btn-laudo">
+                            <i class="fas fa-file-medical"></i> Atualizar Laudo / Nova Vistoria
+                        </button>
+                        <button class="btn-primary btn-full btn-zones">
+                            <i class="fas fa-sliders-h"></i> Gerenciar Zonas e Capacidades
+                        </button>
+                    </div>
+                </section>
+            </main>
+
+            <!-- ===== BOTTOM NAVIGATION ===== -->
+            <nav class="bottom-nav" id="bottom-nav">
+                <button class="nav-item active" data-page="solicitar" id="nav-solicitar">
+                    <i class="fas fa-truck-fast"></i>
+                    <span>Solicitar</span>
+                </button>
+                <button class="nav-item" data-page="cargas" id="nav-cargas">
+                    <i class="fas fa-boxes-stacked"></i>
+                    <span>Cargas</span>
+                </button>
+                <button class="nav-item" data-page="freteiro" id="nav-freteiro">
+                    <i class="fas fa-truck-moving"></i>
+                    <span>Freteiro</span>
+                </button>
+                <button class="nav-item" data-page="impacto" id="nav-impacto">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Impacto</span>
+                </button>
+                <button class="nav-item" data-page="produtor" id="nav-produtor">
+                    <i class="fas fa-user"></i>
+                    <span>Produtor</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- ===== TOAST NOTIFICATION ===== -->
+        <div class="toast" id="toast">
+            <div class="toast-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="toast-msg" id="toast-msg"></div>
+        </div>
+
+        <!-- ===== MATCH MODAL ===== -->
+        <div class="modal-overlay" id="match-modal" style="display:none;">
+            <div class="modal-card">
+                <div class="modal-icon pulse-ring">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h2>Match de Carga!</h2>
+                <p>Rota compatível encontrada com motorista verificado.</p>
+                <div class="match-details">
+                    <div class="match-detail-row">
+                        <i class="fas fa-user-circle"></i>
+                        <div>
+                            <strong>Carlos Silva</strong>
+                            <span>Fiorino Furgão • ⭐ 4.9</span>
+                        </div>
+                    </div>
+                    <div class="match-detail-row">
+                        <i class="fas fa-route"></i>
+                        <div>
+                            <strong>Corupá → Jaraguá do Sul</strong>
+                            <span>24 km • Saída às 05:30</span>
+                        </div>
+                    </div>
+                    <div class="match-detail-row">
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <strong>Selo ANVISA Ativo</strong>
+                            <span>Hortifrúti / Cadeia do Frio</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="match-price">
+                    <span>Sua parte do frete</span>
+                    <strong>R$ 42,00</strong>
+                </div>
+                <button class="btn-primary btn-full" id="btn-accept-match">
+                    <i class="fas fa-check"></i> Aceitar Match
+                </button>
+                <button class="btn-text" id="btn-decline-match">Buscar outro motorista</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
